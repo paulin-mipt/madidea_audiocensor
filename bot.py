@@ -96,8 +96,11 @@ def main():
     updater = Updater(TOKEN)
     
     if 'ON_HEROKU' in os.environ:
-        port = os.environ['PORT']
-        name = os.environ['HEROKU_APP_NAME']
+        port = int(os.environ['PORT'])
+        try:
+            name = os.environ['HEROKU_APP_NAME']
+        except KeyError:
+            name = 'audio-censor'
         domain = 'herokuapp.com'
         updater.start_webhook(listen='0.0.0.0',
                               port=port,
