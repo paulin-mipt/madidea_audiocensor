@@ -109,7 +109,7 @@ def main():
         updater.start_webhook(listen='0.0.0.0',
                               port=port,
                               url_path=TOKEN)
-        fqdn = 'https://{}.{}/{}'.format(name, domain, port)
+        fqdn = 'https://{}.{}/{}'.format(name, domain, TOKEN)
         logging.info(fqdn)
         updater.bot.set_webhook(fqdn)
     else:
