@@ -40,7 +40,7 @@ def make_reply(bot, audio, is_voice=False):
             return None
         extension = audio['mime_type'].split('/')
         if extension[0] != 'audio':
-            logger.warning('bad audio type: %s', extension[0])
+            logger.warning('non-audio mime type: %s', extension[0])
             return None
         audio_path = './{}.{}'.format(file_name,
                                       extension[1].split('-')[-1])
