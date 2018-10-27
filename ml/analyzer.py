@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 def get_model():
-    return load_model(os.path(__file__) + './model.h5')
+    return load_model('./ml/model.h5')
 
 def get_wav_info(wav_file):
     rate, data = wavfile.read(wav_file)
