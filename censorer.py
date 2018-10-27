@@ -3,13 +3,15 @@ import os
 import json
 from pydub import AudioSegment
 
+from google_cloud_cens import get_timestamps_from_gc
+
 censor_beep = AudioSegment.from_wav('./censor-beep.wav')
 censor_beep = censor_beep + censor_beep + censor_beep + censor_beep + censor_beep # for long words
 
 def get_censrored_timestamps(input_path_wav):
     '''Returns: [(start_ms, end_ms)]'''
-    # TODO paste your censoring code here!
-    return [(1000, 1500)]
+    # TODO
+    return get_timestamps_from_gc(input_path_wav)
 
 def censore(input_path_ogg):
     '''Returns: path for the output file'''
