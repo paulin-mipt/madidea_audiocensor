@@ -61,7 +61,10 @@ def make_censoring(bot, message, censored_audio):
     user_name = 'previous sender'
     if 'from_user' in message.__dict__:
         user_name = '[{}](tg://user?id={})'.format(message.from_user.first_name, message.from_user.id)
-    bot.delete_message(chat_id=message.chat_id, message_id=message.message_id)
+    try:
+        bot.delete_message(chat_id=message.chat_id, message_id=message.message_id)
+    except Exception:
+        pass  # nothing to do
     bot.send_message(chat_id=message.chat_id, text=choice(replies).format(user_name), parse_mode=ParseMode.MARKDOWN)
     return bot.send_audio(chat_id=message.chat_id, audio=censored_audio)
     
