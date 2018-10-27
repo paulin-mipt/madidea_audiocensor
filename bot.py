@@ -1,9 +1,17 @@
 from telegram.ext import Updater, MessageHandler, Filters
 import logging
 from random import choice, randint
+import os
 
-from secret_data import TOKEN
 from censorer import censore
+try:
+    from secret_data import TOKEN
+except ModuleNotFoundError:
+    if 'TELEGRAM_TOKEN' in os.environ:
+        TOKEN = os.environ['TELEGRAM_TOKEN']
+    else:
+        logging.error('no token found, add secret_data.py or TELEGRAM_TOKEN environment variable')
+        
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
