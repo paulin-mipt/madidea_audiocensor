@@ -1,4 +1,4 @@
-from utils import *
+from .utils import *
 from keras.models import load_model
 import numpy as np
 
