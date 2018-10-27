@@ -3,6 +3,7 @@ import logging
 from random import choice, randint
 
 from secret_data import TOKEN
+from censorer import censore
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -17,12 +18,6 @@ replies = [
         'You could send this to your mom',
         '...',
         ]
-
-
-def censore(input_path):
-    '''Returns: path for the output file'''
-    # TODO paste your censoring code here!
-    return input_path
 
 
 def make_reply(bot, audio, is_voice=False):
@@ -50,7 +45,9 @@ def make_reply(bot, audio, is_voice=False):
     audio_file.download(audio_path)
 
     ret_path = censore(audio_path)
-    return open(ret_path, 'rb')
+    if ret_path is not None:
+        return open(ret_path, 'rb')
+    return None
 
 
 def audio_echo(bot, update):
