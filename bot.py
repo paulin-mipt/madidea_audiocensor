@@ -13,7 +13,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 
 replies = [
@@ -28,12 +27,6 @@ def make_reply(bot, audio, is_voice=False):
     if is_voice:
         audio_path = './data/test_{}.ogg'.format(randint(0, 100))
     else:
-        try:
-            file_name = audio.file_name.split('.')[0]
-        except KeyError as e:
-            file_name = 'test'
-            logging.error('no file_name in %s', str(audio))
-
         if 'mime_type' not in audio.__dict__:
             logger.warning('no mime type in %s', str(audio))
             return None
@@ -41,8 +34,8 @@ def make_reply(bot, audio, is_voice=False):
         if extension[0] != 'audio':
             logger.warning('non-audio mime type: %s', extension[0])
             return None
-        audio_path = './data/{}.{}'.format(file_name,
-                                      extension[1].split('-')[-1])
+        audio_path = './data/test_{}.{}'.format(randint(0, 100),
+                                                extension[1].split('-')[-1])
     
     file_id = audio.file_id
     audio_file = bot.get_file(file_id)
@@ -90,7 +83,8 @@ def echo(bot, update):
 
 
 def main():
-    os.mkdir('./data')
+    if not os.path.exists('./data'):
+        os.makedirs('./data')
     
     updater = Updater(TOKEN)
 
