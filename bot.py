@@ -13,6 +13,7 @@ except ModuleNotFoundError:
         TOKEN = os.environ['TELEGRAM_TOKEN']
     else:
         logging.error('no token found, add secret_data.py or TELEGRAM_TOKEN environment variable')
+        return
         
 
 # Enable logging
