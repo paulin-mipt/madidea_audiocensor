@@ -9,7 +9,7 @@ from censorer import censore
 try:
     from secret_data import TOKEN
 except ModuleNotFoundError:
-    if 'TELEGRAM_TOKEN' in os.environ:
+    if 'TELEGRAM_TOKEN' in os.environ:yy
         TOKEN = os.environ['TELEGRAM_TOKEN']
     else:
         logging.error('no token found, add secret_data.py or TELEGRAM_TOKEN environment variable')
@@ -89,18 +89,24 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
-def echo(bot, update):
-    print(update)
-
-
 def main():
     if not os.path.exists('./data'):
         os.makedirs('./data')
     
     updater = Updater(TOKEN)
+    
+    if 'ON_HEROKU' in os.environ:
+        port = os.environ['PORT']
+        name = os.environ['HEROKU_APP_NAME']
+        domain = 'herokuapp.com'
+        updater.start_webhook(listen='0.0.0.0',
+                              port=port,
+                              url_path=TOKEN,
+                              key='private.key',
+                              cert='cert.pem',
+                              webhook_url='https://{}.{}:{}/{}'.format(name, domain, port, TOKEN))
 
     dp = updater.dispatcher
-    # dp.add_handler(MessageHandler(Filters.all, echo))
     dp.add_handler(MessageHandler(Filters.audio | Filters.document, audio_echo))
     dp.add_handler(MessageHandler(Filters.voice, voice_echo))
     dp.add_error_handler(error)
