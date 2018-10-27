@@ -1,7 +1,9 @@
-from telegram.ext import Updater, MessageHandler, Filters
 import logging
-from random import choice, randint
 import os
+from random import choice, randint
+
+from telegram.ext import Updater, MessageHandler, Filters
+from telegram import ParseMode
 
 from censorer import censore
 try:
@@ -22,9 +24,9 @@ logger.setLevel(logging.DEBUG)
 
 
 replies = [
-        'Your shifted audio',
-        'Censored audio',
-        'You could send this to your mom',
+        '{} sent an swear voice message. The shifted audio:',
+        'Censored audio from {}',
+        'You could send this to {}\'s mom',
         '...',
         ]
 
@@ -60,8 +62,13 @@ def make_reply(bot, audio, is_voice=False):
 
 
 def make_censoring(bot, message, censored_audio):
+    if censored_audio is None:
+        return None
+    user_name = 'previous sender'
+    if 'from_user' in message.__dict__:
+        user_name = '[{}](tg://user?id={})'.format(message.from_user.first_name, message.from_user.id)
     bot.delete_message(chat_id=message.chat_id, message_id=message.message_id)
-    bot.send_message(chat_id=message.chat_id, text=choice(replies))
+    bot.send_message(chat_id=message.chat_id, text=choice(replies).format(user_name), parse_mode=ParseMode.MARKDOWN)
     return bot.send_audio(chat_id=message.chat_id, audio=censored_audio)
     
 
@@ -90,6 +97,8 @@ def echo(bot, update):
 
 
 def main():
+    os.mkdir('./data')
+    
     updater = Updater(TOKEN)
 
     dp = updater.dispatcher
