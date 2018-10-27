@@ -2,6 +2,7 @@ import io
 import os
 import json
 from ml import analyzer
+from pydub import AudioSegment
 
 censor_beep = AudioSegment.from_wav('./censor-beep.wav')
 censor_beep = censor_beep + censor_beep + censor_beep + censor_beep + censor_beep # for long words

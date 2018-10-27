@@ -2,21 +2,23 @@
 
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
+from scipy.signal import spectrogram
 import os
 from pydub import AudioSegment
 
 # Calculate and plot spectrogram for a wav audio file
 def graph_spectrogram(wav_file):
     rate, data = get_wav_info(wav_file)
-    nfft = 200 # Length of each window segment
-    fs = 8000 # Sampling frequencies
-    noverlap = 120 # Overlap between windows
+    print(data.shape)
+    nperseg = 200
+    fs = 8000 
+    noverlap = 120
     nchannels = data.ndim
     if nchannels == 1:
-        pxx, freqs, bins, im = plt.specgram(data, nfft, fs, noverlap = noverlap)
+        freqs, times, pxx = spectrogram(data, fs=fs, nperseg=nperseg, noverlap = noverlap)
     elif nchannels == 2:
-        pxx, freqs, bins, im = plt.specgram(data[:,0], nfft, fs, noverlap = noverlap)
-    return pxx
+        freqs, times, pxx = spectrogram(data[:,0], fs=fs, nperseg=nperseg, noverlap = noverlap)
+    return pxx, data, rate, times
 
 # Load a wav file
 def get_wav_info(wav_file):
