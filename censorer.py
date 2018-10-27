@@ -1,6 +1,6 @@
 import io
 import os
-import json
+import numpy as np
 from ml import analyzer
 from pydub import AudioSegment
 
@@ -24,8 +24,9 @@ def censore(input_path_ogg):
     if len(censored_timestamps) == 0:
         return None # nothing to censore
     
+    censor_beep_norm = censor_beep.apply_gain(np.average(audio.dBFS) - censor_beep.max_dBFS)
     for start_ms, end_ms in censored_timestamps:
-        audio = audio[:start_ms] + censor_beep[:(end_ms-start_ms)] + audio[end_ms:]
+        audio = audio[:start_ms] + censor_beep_norm[:(end_ms-start_ms)] + audio[end_ms:]
     
     output_path_ogg = input_path_ogg[:-4] + '_c.ogg'
     audio.export(output_path_ogg, format='ogg')
