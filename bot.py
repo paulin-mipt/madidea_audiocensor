@@ -28,14 +28,14 @@ def make_reply(bot, audio, is_voice=False):
             file_name = audio.file_name.split('.')[0]
         except KeyError as e:
             file_name = 'test'
-            logging.error('no file_name in %', audio)
+            logging.error('no file_name in %s', str(audio))
 
         if 'mime_type' not in audio.__dict__:
-            logger.warning('no mime type in %', audio)
+            logger.warning('no mime type in %s', str(audio))
             return None
         extension = audio['mime_type'].split('/')
         if extension[0] != 'audio':
-            logger.warning('bad audio type: %', extension[0])
+            logger.warning('non-audio mime type: %s', extension[0])
             return None
         audio_path = './{}.{}'.format(file_name,
                                       extension[1].split('-')[-1])
