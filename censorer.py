@@ -7,9 +7,10 @@ from pydub import AudioSegment
 censor_beep = AudioSegment.from_wav('./censor-beep.wav')
 censor_beep = censor_beep + censor_beep + censor_beep + censor_beep + censor_beep # for long words
 
+model = analyzer.get_model()
+
 def get_censored_timestamps(input_path_wav):
     '''Returns: [(start_ms, end_ms)]'''
-    model = analyzer.get_model()
     data, rate, borders = analyzer.get_trigger_timestamps(model, './ml/raw_data/speech.wav')
     return borders
 
