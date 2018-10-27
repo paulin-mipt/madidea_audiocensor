@@ -18,7 +18,7 @@ except ModuleNotFoundError:
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+                    level=logging.DEBUG)
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +56,7 @@ def make_reply(bot, audio, is_voice=False):
 
 
 def make_censoring(bot, message, censored_audio):
+    logger.info('censored, sending')
     if censored_audio is None:
         return None
     user_name = 'previous sender'
@@ -80,6 +81,7 @@ def audio_echo(bot, update):
 
 
 def voice_echo(bot, update):
+    logger.info('new voice message, censoring...')
     voice = update.message.voice
     answer = make_reply(bot, voice, is_voice=True)
     return make_censoring(bot, update.message, answer)   
