@@ -9,8 +9,8 @@ censor_beep = censor_beep + censor_beep + censor_beep + censor_beep + censor_bee
 
 def get_censored_timestamps(input_path_wav):
     '''Returns: [(start_ms, end_ms)]'''
-    model = get_model()
-    data, rate, borders = get_trigger_timestamps(model, './ml/raw_data/speech.wav')
+    model = analyzer.get_model()
+    data, rate, borders = analyzer.get_trigger_timestamps(model, './ml/raw_data/speech.wav')
     return borders
 
 def censore(input_path_ogg):
