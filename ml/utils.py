@@ -9,7 +9,6 @@ from pydub import AudioSegment
 # Calculate and plot spectrogram for a wav audio file
 def graph_spectrogram(wav_file):
     rate, data = get_wav_info(wav_file)
-    print(data.shape)
     nperseg = 200
     fs = 8000 
     noverlap = 120
@@ -34,10 +33,12 @@ def match_target_amplitude(sound, target_dBFS):
 def load_raw_audio():
     activates = []
     backgrounds = []
+    vols = []
     negatives = []
     for filename in os.listdir("./ml/raw_data/activates"):
         if filename.endswith("wav"):
             activate = AudioSegment.from_wav("./ml/raw_data/activates/"+filename)
+            vols.append(activate.max_dBFS)
             activates.append(activate)
     for filename in os.listdir("./ml/raw_data/backgrounds"):
         if filename.endswith("wav"):
@@ -46,5 +47,11 @@ def load_raw_audio():
     for filename in os.listdir("./ml/raw_data/negatives"):
         if filename.endswith("wav"):
             negative = AudioSegment.from_wav("./ml/raw_data/negatives/"+filename)
+            vols.append(negative.max_dBFS)
             negatives.append(negative)
+    max_vol = max(vols)
+    for i in range(len(activates)):
+        activates[i] -= (max_vol - activates[i].max_dBFS)
+    for i in range(len(negatives)):
+        negatives[i] -= (max_vol - negatives[i].max_dBFS)
     return activates, negatives, backgrounds
