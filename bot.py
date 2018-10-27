@@ -10,6 +10,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 replies = [
@@ -22,7 +23,7 @@ replies = [
 
 def make_reply(bot, audio, is_voice=False):
     if is_voice:
-        audio_path = './test_{}.ogg'.format(randint(0, 100))
+        audio_path = './data/test_{}.ogg'.format(randint(0, 100))
     else:
         try:
             file_name = audio.file_name.split('.')[0]
@@ -37,7 +38,7 @@ def make_reply(bot, audio, is_voice=False):
         if extension[0] != 'audio':
             logger.warning('non-audio mime type: %s', extension[0])
             return None
-        audio_path = './{}.{}'.format(file_name,
+        audio_path = './data/{}.{}'.format(file_name,
                                       extension[1].split('-')[-1])
     
     file_id = audio.file_id
@@ -50,6 +51,12 @@ def make_reply(bot, audio, is_voice=False):
     return None
 
 
+def make_censoring(bot, message, censored_audio):
+    bot.delete_message(chat_id=message.chat_id, message_id=message.message_id)
+    bot.send_message(chat_id=message.chat_id, text=choice(replies))
+    return bot.send_audio(chat_id=message.chat_id, audio=censored_audio)
+    
+
 def audio_echo(bot, update):
     if update.message.audio is not None:
         audio = update.message.audio
@@ -57,17 +64,13 @@ def audio_echo(bot, update):
         audio = update.message.document
     logger.info(audio)
     answer = make_reply(bot, audio)
-    if answer is not None:
-        bot.send_message(chat_id=update.message.chat_id, text=choice(replies))
-        return bot.send_audio(chat_id=update.message.chat_id, audio=answer)    
+    return make_censoring(bot, update.message, answer)  
 
 
 def voice_echo(bot, update):
     voice = update.message.voice
     answer = make_reply(bot, voice, is_voice=True)
-    if answer is not None:
-        bot.send_message(chat_id=update.message.chat_id, text=choice(replies))
-        return bot.send_voice(chat_id=update.message.chat_id, voice=answer)    
+    return make_censoring(bot, update.message, answer)   
 
 
 def error(bot, update, error):
