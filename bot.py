@@ -9,7 +9,7 @@ from censorer import censore
 try:
     from secret_data import TOKEN
 except ModuleNotFoundError:
-    if 'TELEGRAM_TOKEN' in os.environ:yy
+    if 'TELEGRAM_TOKEN' in os.environ:
         TOKEN = os.environ['TELEGRAM_TOKEN']
     else:
         logging.error('no token found, add secret_data.py or TELEGRAM_TOKEN environment variable')
