@@ -105,8 +105,6 @@ def main():
         updater.start_webhook(listen='0.0.0.0',
                               port=port,
                               url_path=TOKEN,
-                              key='private.key',
-                              cert='cert.pem',
                               webhook_url='https://{}.{}:{}/{}'.format(name, domain, port, TOKEN))
 
     dp = updater.dispatcher
