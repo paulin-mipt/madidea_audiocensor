@@ -100,7 +100,7 @@ def main():
     dp.add_error_handler(error)
     
     if 'ON_HEROKU' in os.environ:
-        port = int(os.environ['PORT'])
+        port = int(os.environ.get('PORT', 8443))
         try:
             name = os.environ['HEROKU_APP_NAME']
         except KeyError:
@@ -108,8 +108,10 @@ def main():
         domain = 'herokuapp.com'
         updater.start_webhook(listen='0.0.0.0',
                               port=port,
-                              url_path=TOKEN,
-                              webhook_url='https://{}.{}:{}/{}'.format(name, domain, port, TOKEN))
+                              url_path=TOKEN)
+        fqdn = 'https://{}.{}:{}/{}'.format(name, domain, port, TOKEN)
+        logging.info(fqdn)
+        updater.bot.set_webhook(fqdn)
     else:
         updater.start_polling()
     updater.idle()
