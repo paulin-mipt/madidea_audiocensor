@@ -1,15 +1,16 @@
 import io
 import os
 import json
-from pydub import AudioSegment
+from ml import analyzer
 
 censor_beep = AudioSegment.from_wav('./censor-beep.wav')
 censor_beep = censor_beep + censor_beep + censor_beep + censor_beep + censor_beep # for long words
 
-def get_censrored_timestamps(input_path_wav):
+def get_censored_timestamps(input_path_wav):
     '''Returns: [(start_ms, end_ms)]'''
-    # TODO paste your censoring code here!
-    return [(1000, 1500)]
+    model = get_model()
+    data, rate, borders = get_trigger_timestamps(model, './ml/raw_data/speech.wav')
+    return borders
 
 def censore(input_path_ogg):
     '''Returns: path for the output file'''
@@ -18,7 +19,7 @@ def censore(input_path_ogg):
     input_path_wav = input_path_ogg[:-4] + '.wav'
     audio.set_channels(1).export(input_path_wav, format='wav')
     
-    censored_timestamps = get_censrored_timestamps(input_path_wav)
+    censored_timestamps = get_censored_timestamps(input_path_wav)
     if len(censored_timestamps) == 0:
         return None # nothing to censore
     
