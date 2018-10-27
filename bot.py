@@ -1,7 +1,9 @@
+import logging
+import os
+from random import choice, randint
+
 from telegram.ext import Updater, MessageHandler, Filters
 from telegram import ParseMode
-import logging
-from random import choice, randint
 
 from secret_data import TOKEN
 from censorer import censore
@@ -88,6 +90,8 @@ def echo(bot, update):
 
 
 def main():
+    os.mkdir('./data')
+    
     updater = Updater(TOKEN)
 
     dp = updater.dispatcher
