@@ -7,7 +7,7 @@ from google_cloud_cens import get_timestamps_from_gc
 
 class Censorer:
 
-    def __init__(self, use_google_cloud = False):
+    def __init__(self, use_google_cloud=True):
         self.use_google_cloud = use_google_cloud
         self.censor_beep = AudioSegment.from_wav('./censor-beep.wav')
         self.censor_beep = self.censor_beep * 10 # 10 beeps in a row for long words

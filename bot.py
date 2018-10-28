@@ -16,6 +16,15 @@ except ModuleNotFoundError:
         logging.error('no token found, add secret_data.py or TELEGRAM_TOKEN environment variable')
         exit(1)
 
+# for Heroku
+try:
+    gjson = os.environ['GOOGLE_SPEECH']
+    with open('google_key.json', 'w') as fout:
+        fout.write(gjson)
+except KeyError:
+    pass
+
+
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
