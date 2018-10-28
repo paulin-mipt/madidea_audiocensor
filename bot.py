@@ -5,8 +5,6 @@ from random import choice, randint
 from telegram.ext import Updater, MessageHandler, Filters
 from telegram import ParseMode
 
-from censorer import Censorer
-
 try:
     from secret_data import TOKEN
 except ModuleNotFoundError:
@@ -15,6 +13,17 @@ except ModuleNotFoundError:
     else:
         logging.error('no token found, add secret_data.py or TELEGRAM_TOKEN environment variable')
         exit(1)
+
+# for Heroku
+try:
+    gjson = os.environ['GOOGLE_SPEECH']
+    logging.info('writing config json')
+    with open('google_key.json', 'w') as fout:
+        fout.write(gjson)
+except KeyError:
+    pass
+
+from censorer import Censorer
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
