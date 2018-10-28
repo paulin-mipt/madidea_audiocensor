@@ -3,10 +3,12 @@ import os
 import numpy as np
 from ml import analyzer
 from pydub import AudioSegment
+from google_cloud_cens import get_timestamps_from_gc
 
 class Censorer:
 
-    def __init__(self):
+    def __init__(self, use_google_cloud = False):
+        self.use_google_cloud = use_google_cloud
         self.censor_beep = AudioSegment.from_wav('./censor-beep.wav')
         self.censor_beep = self.censor_beep * 10 # 10 beeps in a row for long words
 
@@ -15,8 +17,11 @@ class Censorer:
 
     def get_censored_timestamps(self, input_path_wav):
         '''Returns: [(start_ms, end_ms)]'''
-        data, rate, borders = analyzer.get_trigger_timestamps(self.model, './ml/raw_data/speech.wav')
-        return borders
+        if self.use_google_cloud:
+            return get_timestamps_from_gc(input_path_wav)
+        else:
+            data, rate, borders = analyzer.get_trigger_timestamps(self.model, './ml/raw_data/speech.wav')
+            return borders
 
     def censore(self, input_path_ogg):
         '''Returns: path for the output file'''
